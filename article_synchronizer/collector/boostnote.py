@@ -45,7 +45,7 @@ class BoostnoteCollector(CollectorBase):
             files.split('/')[-1]: self._get_content(file, self.CSON)
             for file in files}
         return note_file_dict
-   
+
     def _get_atta_dict(self, atta_dir):
         atta_dict = {
             dir.split('/')[-1]: self._get_all_files_in_dir(dir)
@@ -62,7 +62,7 @@ class BoostnoteCollector(CollectorBase):
 
     def _add_atta_to_note(self, note_dict, atta_dict):
         for key, note in note_dict.items():
-            note['attachements'] = atta_dict.get(key)
+            note['attachements'] = atta_dict.get(key.split('.')[0])
 
     def _add_folder_to_note(self, note_dict, boosnote_dict):
         folder_dict = boosnote_dict.get('folders')
@@ -71,7 +71,7 @@ class BoostnoteCollector(CollectorBase):
                 if item['key'] == note['folder']:
                     note['folder_name'] = item['name']
 
-    def _get_articles(self, articles_dir):
+    def _get_article_dict(self, articles_dir):
         notes_dir = self._concatenate_path(
             articles_dir, self.notes_dir)
         atta_dir = self._concatenate_path(
@@ -85,5 +85,3 @@ class BoostnoteCollector(CollectorBase):
         self._add_atta_to_note(note_dict, atta_dict)
         self._add_folder_to_note(note_dict, boosnote_dic)
         return note_dict
-        
-

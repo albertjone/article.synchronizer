@@ -11,25 +11,37 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+from article_synchronizer import utils
+from article_synchronizer import poster
 
 class Article(object):
-    def __init__(self,
-                 created_at,
-                 updated_at,
-                 type,
-                 title,
-                 tags,
-                 content,
-                 lines_highlighted,
-                 is_starred,
-                 is_trashed):
-        self.created_at = created_at
-        self.updated_at = updated_at
-        self.type = type
-        self.title = title
-        self.tags = tags
-        self.content = content
-        self.lines_highlighted = lines_highlighted
-        self.is_starred = is_starred
-        self.is_trashed = is_trashed
+    def __init__(self, *args, **kwargs):
+        self.created_at = kwargs.get('created_at')
+        self.updated_at = kwargs.get('updated_at')
+        self.type = kwargs.get('type')
+        self.title = kwargs.get('title')
+        self.tags = kwargs.get('tags')
+        self.content = kwargs.get('content')
+        self.lines_highlighted = kwargs.get('lines_highlighted')
+        self.is_starred = kwargs.get('is_starred')
+        self.is_trashed = kwargs.get('is_trashed')
+        self.attachements = kwargs.get('attachements')
+        self.folder_name = kwargs.get('folder_name')
+        self.folder = kwargs.get('folder')
+        self.atta_driver = kwargs.get('atta_driver_name', 'qiniu')
+        self._setup_article()
+
+    def _setup_article(self):
+        self._load_atta_driver()
+        for atta in self.attachements:
+            self._post_attachement(atta)
+
+    def _load_atta_driver(self):
+        poster.get_atta_poster_driver_by_name(self.atta_driver)
+
+    def _post_attachement(self, atta):
+        temp = self.atta_driver.get_atta_by_path(atta)
+        if utils.cmp(temp, atta):
+            return
+        url = self._atta_driver.save_atta_by_path(atta)
+        return {atta, url}

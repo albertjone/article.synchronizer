@@ -11,11 +11,20 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from article_synchronizer.poster.attachement.qiniu import *
+from unittest import TestCase
 
 
-def get_atta_poster_driver_by_name(atta_name):
-    pass
+# class TestQiniuAttaDriver(TestCase):
+
+ak = ''
+sk = ''
+bucket_domain = 'dawncreat.s3-cn-east-1.qiniucs.com'
+bucket_name = 'dawncreat'
+file_path = '/Users/steveguan/code/Interest/Boostnote/attachments/0c762b83-9100-4e72-a78a-62a4d49d2864/b0015c5a.png'
+file_name = '0c762b83-9100-4e72-a78a-62a4d49d2864:b0015c5a.png'
 
 
-def get_article_poster_driver_by_name(atta_name):
-    pass
+driver = QiniuAttaDriver(ak, sk, bucket_domain)
+driver.save_atta_by_path(file_path, bucket_name)
+driver.get_atta_by_path(file_path, bucket_name)

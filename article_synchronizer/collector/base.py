@@ -34,7 +34,7 @@ class CollectorBase(object):
     @staticmethod
     def _get_content(file_path, file_type):
         return utils.get_file_content(file_path, file_type)
-        
+
     def _get_all_files_in_dir(self, dir_name):
         """dir_name must be a absolute path"""
         return utils.get_all_files_in_dir(dir_name)
@@ -50,9 +50,8 @@ class CollectorBase(object):
     def _get_articles(self, articles_dir):
         """All subclass should implement the method"""
 
-    def get_articles(self, articles_dir):
+    def get_article_dict(self, articles_dir):
         """all revoker should invoke this method"""
         articles_dir = utils.get_abs_path(articles_dir)
-        articles = self._get_articles(articles_dir)
+        articles = self._get_article_dict(articles_dir)
         return articles
-

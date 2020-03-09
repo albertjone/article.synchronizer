@@ -1,0 +1,17 @@
+{
+    "createdAt": "2019-03-24T03:11:54.069Z",
+    "updatedAt": "2019-03-24T03:40:45.129Z",
+    "type": "MARKDOWN_NOTE",
+    "folder": "279b9950aaa1780b083b",
+    "title": "horizon 无法访问，This site can’t be reached",
+    "tags": [],
+    "content": "## horizon 无法访问，This site can’t be reached\n\n### 环境：\ncentos7.6 minimal\nopenstack master\n\n### 问题描述：\n在用devstack搭建环境后，无法访问horizon的页面，使用\n```shell\nsystemctl status devstack@*\n```\n查看服务，发现所有的服务都是正常的。\n\n### 解决过程：\n一开始以为是防火墙的缘故（过去有遇到这种情况），通过\n```shell\nsystemctl status firewalld\n```\n发现firewalld确实起了，通过\n```shell\nsystemctl disable firewalld\n```\n禁用firewalld后依旧无效。\n查看页面的报错如图：\n![928ce851.png](:storage/0c762b83-9100-4e72-a78a-62a4d49d2864/928ce851.png)\n\n便感觉是网络原因，使用\n```shell\ntelnet 10.211.55.8 80\n```\n发现无法建立连接，更加确定了是端口没有放开的原因\n由于对iptables不了解所以学习了下，感觉这篇文章不错，对[iptables](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-iptables-on-ubuntu-14-04)不熟的可以学习下,虽然作者是以ubuntu平台作介绍的，但是大部分内容同样适用于centos。\n\n通过\n```\niptables -L --line-number\n```\n得到\n```\nChain INPUT (policy ACCEPT)\nnum  target     prot opt source               destination\n1    ACCEPT     udp  --  anywhere             anywhere             udp dpt:domain\n2    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:domain\n3    ACCEPT     udp  --  anywhere             anywhere             udp dpt:bootps\n4    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:bootps\n5    ACCEPT     all  --  anywhere             anywhere             state RELATED,ESTABLISHED\n6    ACCEPT     icmp --  anywhere             anywhere\n7    ACCEPT     all  --  anywhere             anywhere\n8    ACCEPT     tcp  --  anywhere             anywhere             state NEW tcp dpt:ssh\n9    REJECT     all  --  anywhere             anywhere             reject-with icmp-host-prohibited\n\nChain FORWARD (policy ACCEPT)\nnum  target     prot opt source               destination\n1    ACCEPT     all  --  anywhere             192.168.122.0/24     ctstate RELATED,ESTABLISHED\n2    ACCEPT     all  --  192.168.122.0/24     anywhere\n3    ACCEPT     all  --  anywhere             anywhere\n4    REJECT     all  --  anywhere             anywhere             reject-with icmp-port-unreachable\n5    REJECT     all  --  anywhere             anywhere             reject-with icmp-port-unreachable\n6    REJECT     all  --  anywhere             anywhere             reject-with icmp-host-prohibited\n\nChain OUTPUT (policy ACCEPT)\nnum  target     prot opt source               destination\n1    ACCEPT     udp  --  anywhere             anywhere             udp dpt:bootpc\n```\n发下INPUT的chain没有开放80，而且第九条是reject所有(意味着，在第九条被命中的话就会被丢掉)\n所以需要在第九规则前加一条，匹配80端口的\n```\n# 我的eth0是对外的\niptables -I INPUT 8 -i eth0 -j ACCEPT\n# 保存刚才的修改\nservice iptables save\n```\n\n![b0015c5a.png](:storage/0c762b83-9100-4e72-a78a-62a4d49d2864/b0015c5a.png)\n\n\n\n\n",
+    "linesHighlighted": [],
+    "isStarred": False,
+    "isTrashed": False,
+    "attachements": [
+        "/Users/steveguan/code/Interest/Boostnote/attachments/0c762b83-9100-4e72-a78a-62a4d49d2864/b0015c5a.png",
+        "/Users/steveguan/code/Interest/Boostnote/attachments/0c762b83-9100-4e72-a78a-62a4d49d2864/928ce851.png"
+    ],
+    "folder_name": "Openstack"
+}

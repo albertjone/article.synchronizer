@@ -11,11 +11,15 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from abc import ABC
+from abc import abstractclassmethod
 
 
-def get_atta_poster_driver_by_name(atta_name):
-    pass
+class BaseAttaDriver(ABC):
+    @abstractclassmethod
+    def get_atta_by_path(self, atta, bucket_name):
+        """return an attachement"""
 
-
-def get_article_poster_driver_by_name(atta_name):
-    pass
+    @abstractclassmethod
+    def save_atta_by_path(self, atta, bucket_name):
+        """save an attachement and return an url"""

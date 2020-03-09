@@ -39,7 +39,7 @@ class Scheduler(object):
                 flag = False
         flag = True
         collector = get_collector(client_name)
-        blogs = collector.get_articles(articles_dir)
+        blog_dict = collector.get_articles(articles_dir)
         # poster
         print('Please input your login url:')
         login_url = input()
@@ -47,5 +47,3 @@ class Scheduler(object):
         user_name = input()
         print('Please input password')
         password = input()
-
-            

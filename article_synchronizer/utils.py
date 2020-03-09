@@ -1,3 +1,4 @@
+import filecmp
 import os
 
 import cson
@@ -26,13 +27,15 @@ def get_all_files_in_dir(dir):
     """return a list of absolute path of files in dir"""
     entrys = os.listdir(dir)
     return [os.path.join(dir, entry)
-            for entry in entrys if os.path.isfile(os.path.join(dir, entry))]
+            for entry in entrys
+            if os.path.isfile(os.path.join(dir, entry))]
 
 
 def get_all_dirs_in_dir(dir):
     """return a list of absolute path of dirs in dir"""
     return [os.path.join(dir, entry)
-            for entry in os.listdir(dir) if os.path.isdir(entry)]
+            for entry in os.listdir(dir)
+            if os.path.isdir(os.path.join(dir, entry))]
 
 def is_dir_exits(dir):
     if not os.path.isdir(dir):
@@ -50,6 +53,9 @@ def is_path_exists(file_path):
         return os.path.isfile(file_path)
     return True
 
+
+def cmp(f1, f2, shallow=True):
+    return filecmp.cmp(f1, f2, shallow=shallow)
 
 def get_abs_path(path):
     return os.path.abspath(path)
@@ -108,4 +114,3 @@ def get_file_content(file_path, file_type=RAW):
         return cson2dict(file_content)
     else:
         raise UnknownFileTypeException
-     
