@@ -33,7 +33,7 @@ class BoostnoteCollector(CollectorBase):
         }
     """
 
-    notes_dir = 'notes'
+    note_dir = 'notes'
     attachments_dir = 'attachments'
     boostnote_file = 'boostnote.json'
 
@@ -72,8 +72,8 @@ class BoostnoteCollector(CollectorBase):
                     note['folder_name'] = item['name']
 
     def _get_article_dict(self, articles_dir):
-        notes_dir = self._concatenate_path(
-            articles_dir, self.notes_dir)
+        note_dir = self._concatenate_path(
+            articles_dir, self.note_dir)
         atta_dir = self._concatenate_path(
             articles_dir, self.attachments_dir)
         boostnote_file = self._concatenate_path(
@@ -81,7 +81,7 @@ class BoostnoteCollector(CollectorBase):
 
         boosnote_dic = self._get_boostnote_dict(boostnote_file)
         atta_dict = self._get_atta_dict(atta_dir)
-        note_dict = self._get_note_dict(notes_dir)
+        note_dict = self._get_note_dict(note_dir)
         self._add_atta_to_note(note_dict, atta_dict)
         self._add_folder_to_note(note_dict, boosnote_dic)
         return note_dict
