@@ -46,17 +46,21 @@ class QiniuAttaDriver(BaseAttaDriver):
 
     def _get_atta_name(self, atta):
         note, atta = atta.split('/')[-2:]
-        return '%s:%s' %(note, atta)
+        return '%s:%s' % (note, atta)
 
     def get_atta_by_path(self, atta, bucket_name):
-        token = self._get_auth_token(bucket_name)
         url = 'http://%s/%s' % (
             self.bucket_domain, self._get_atta_name(atta))
         private_url = self.auth.private_download_url(url, expires=3600)
-        print(private_url)
         r = requests.get(private_url)
-        print(r.text)
-        return r
+        return r.raw
+
+    def get_atta_url_by_path(self, atta, bucket_name):
+        url = 'http://%s/%s' % (
+            self.bucket_domain, self._get_atta_name(atta))
+        private_url = self.auth.private_download_url(url, expires=3600)
+        return private_url
+
 
     def save_atta_by_path(self, atta, bucket_name):
         token = self._get_auth_token(bucket_name)
